@@ -1,0 +1,10 @@
+gradio
+llama-index-core
+llama-index-readers-file
+llama-index-vector-stores-faiss
+llama-index-embeddings-huggingface
+sentence-transformers
+langchain-core
+langchain-openai
+python-dotenv
+pypdf
