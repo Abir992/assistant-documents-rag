@@ -14,12 +14,15 @@ def index_action(files):
 
 
 def question_action(question):
+    print(f"[Gradio] Clic reçu. Question : {question!r}", flush=True)
     try:
         answer, sources = answer_question(question)
+        print("[Gradio] Réponse reçue de answer_question.", flush=True)
         return answer, sources
     except Exception as error:
+        print(f"[Gradio] Erreur : {error!r}", flush=True)
         return f"Erreur : {error}", ""
-
+    
 
 with gr.Blocks(title="Assistant documentaire RAG") as demo:
     gr.Markdown("# Assistant documentaire")

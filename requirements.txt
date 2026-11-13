@@ -5,6 +5,6 @@ llama-index-vector-stores-faiss
 llama-index-embeddings-huggingface
 sentence-transformers
 langchain-core
-langchain-openai
+langchain-ollama
 python-dotenv
 pypdf

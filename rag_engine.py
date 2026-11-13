@@ -3,7 +3,7 @@ import os
 import faiss
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from llama_index.core import SimpleDirectoryReader, StorageContext, VectorStoreIndex
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.faiss import FaissVectorStore
@@ -65,7 +65,9 @@ def answer_question(question: str) -> tuple[str, str]:
     if not question or not question.strip():
         raise ValueError("Écris une question.")
 
+    print("[RAG] Recherche des passages...", flush=True)
     retrieved_nodes = _index.as_retriever(similarity_top_k=4).retrieve(question)
+    print(f"[RAG] Passages trouvés : {len(retrieved_nodes)}", flush=True)
 
     if not retrieved_nodes:
         return "Je n'ai pas trouvé de passage pertinent.", ""
@@ -86,14 +88,17 @@ def answer_question(question: str) -> tuple[str, str]:
 
     context = "\n\n".join(context_parts)
 
-    llm = ChatOpenAI(
-        model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+    llm = ChatOllama(
+        model="qwen3:4b",
         temperature=0,
+        reasoning=False,
+        num_predict=256,
     )
+    print("[Ollama] Génération en cours...", flush=True)
     response = (_prompt | llm).invoke({
         "context": context,
         "question": question,
     })
-
+    print("[Ollama] Réponse reçue.", flush=True)
     unique_sources = list(dict.fromkeys(source_names))
     return str(response.content), "\n".join(unique_sources)
